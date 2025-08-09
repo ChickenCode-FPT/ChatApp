@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.EasyChat" parent="Theme.AppCompat.Light.NoActionBar" />
+
+    <item type="color"  name="colorPrimary">@color/my_primary </item>
+    <item type="color" name="colorPrimaryVariant">@color/my_primary </item>
+    <item name="colorOnPrimary" type="color">@color/white</item>
+
+
+    <item type="color" name="secondaryPrimary">@color/secondaryPrimary </item>
+    <item type="color" name="colorSecondaryVariant">@color/secondaryPrimary</item>
+    <item name="colorOnSecondary" type="color">@color/black</item>
+
+
+</resources>
