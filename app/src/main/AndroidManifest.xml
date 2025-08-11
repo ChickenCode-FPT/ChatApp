@@ -12,6 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EasyChat">
         <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.EasyChat" />
+        <activity
             android:name=".LoginUsernameActivity"
             android:exported="false" />
         <activity
@@ -30,11 +35,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.EasyChat" />
     </application>
 
 </manifest>
