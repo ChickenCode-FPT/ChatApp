@@ -29,8 +29,22 @@ public class SearchUserActivity extends AppCompatActivity {
         backButton = findViewById(R.id.back_btn);
         recyclerView = findViewById(R.id.search_user_recycleview);
 
+        searchInput.requestFocus();
+
         backButton.setOnClickListener( v ->{
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
         });
+
+        searchButton.setOnClickListener( v ->{
+            String searchTerm = searchInput.getText().toString();
+            if(searchTerm.isEmpty() || searchTerm.length() < 3 ){
+                searchInput.setError("Invalid username");
+            }
+            setupSearchRecyclerView(searchTerm);
+        });
+    }
+
+    void setupSearchRecyclerView(String searchTerm){
+
     }
 }

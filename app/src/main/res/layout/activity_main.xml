@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/my_primary"
-        android:padding="10dp">
+        android:paddingTop="40dp">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -21,7 +21,9 @@
             android:textStyle="bold"
             android:textColor="@color/white"
             android:layout_marginStart="10dp"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:layout_marginTop="30dp"
+            />
         <ImageButton
             android:layout_width="32dp"
             android:layout_height="32dp"
@@ -33,6 +35,8 @@
 
             android:layout_marginEnd="10dp"
             android:id="@+id/main_search_btn"
+            android:layout_marginTop="30dp"
+
             />
 
 
@@ -57,8 +61,7 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"        android:layout_alignParentBottom="true"
         android:background="@color/colorPrimary"
         android:id="@+id/bottom_navigation"
         app:menu="@menu/bottom_navigation_menu"
