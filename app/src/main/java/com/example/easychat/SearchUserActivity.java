@@ -1,6 +1,8 @@
 package com.example.easychat;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -9,7 +11,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.easychat.adapter.SearchUserRecyclerAdapter;
+import com.example.easychat.models.UserModel;
+import com.example.easychat.utils.FirebaseUtil;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.auth.User;
 
 public class SearchUserActivity extends AppCompatActivity {
 
@@ -17,7 +27,7 @@ public class SearchUserActivity extends AppCompatActivity {
     ImageButton searchButton;
     ImageButton backButton;
     RecyclerView recyclerView;
-
+    SearchUserRecyclerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,16 +45,68 @@ public class SearchUserActivity extends AppCompatActivity {
             getOnBackPressedDispatcher().onBackPressed();
         });
 
-        searchButton.setOnClickListener( v ->{
-            String searchTerm = searchInput.getText().toString();
-            if(searchTerm.isEmpty() || searchTerm.length() < 3 ){
-                searchInput.setError("Invalid username");
-            }
-            setupSearchRecyclerView(searchTerm);
-        });
+       searchInput.addTextChangedListener(new TextWatcher() {
+           @Override
+           public void afterTextChanged(Editable s) {
+
+           }
+
+           @Override
+           public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+           }
+
+           @Override
+           public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String searchTerm = s.toString().trim();
+                setupSearchRecyclerView(searchTerm);
+           }
+       });
     }
 
     void setupSearchRecyclerView(String searchTerm){
+        if (adapter != null) {
+            adapter.stopListening();
+        }
+        if (searchTerm.isEmpty()) {
+            recyclerView.setAdapter(null);
+            return;
+        }
+        Query query = FirebaseUtil.allUserCollectionReference()
+                .orderBy("username")
+                .startAt(searchTerm)
+                .endAt(searchTerm + "\uf8ff");
 
+            FirestoreRecyclerOptions<UserModel> options = new FirestoreRecyclerOptions.Builder<UserModel>()
+                    .setQuery(query,UserModel.class).build();
+
+            adapter = new SearchUserRecyclerAdapter(options,getApplicationContext());
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(adapter);
+            adapter.startListening();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(adapter != null){
+            adapter.startListening();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(adapter !=null){
+            adapter.stopListening();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(adapter != null){
+            adapter.startListening();
+        }
     }
 }

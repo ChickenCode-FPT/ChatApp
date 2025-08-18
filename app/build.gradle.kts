@@ -65,5 +65,6 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:34.1.0"))
     implementation("com.hbb20:ccp:2.5.0")
     implementation("com.google.firebase:firebase-auth")
+    implementation("com.firebaseui:firebase-ui-firestore:9.0.0")
 
 }

@@ -35,7 +35,7 @@ public class LoginUsernameActivity extends AppCompatActivity {
     String phoneNumber;
     UserModel userModel;
     Date date = new Date();
-    Timestamp timestamp = new Timestamp(date.getTime());
+    Date timestamp = new Timestamp(date.getTime());
 
 
     @Override
@@ -83,7 +83,7 @@ public class LoginUsernameActivity extends AppCompatActivity {
         if(userModel != null){
             userModel.setUsername(username);
         }else{
-            userModel = new UserModel(phoneNumber,username, timestamp);
+            userModel = new UserModel(phoneNumber,username, timestamp,FirebaseUtil.currentUserId());
         }
         FirebaseUtil.currentUserDetails().set(userModel).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
