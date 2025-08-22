@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EasyChat">
         <activity
+            android:name=".ChatActivity"
+            android:exported="false" />
+        <activity
             android:name=".SearchUserActivity"
             android:exported="false" />
         <activity
