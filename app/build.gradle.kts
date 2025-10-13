@@ -68,3 +68,4 @@ dependencies {
     implementation("com.firebaseui:firebase-ui-firestore:9.0.0")
 
 }
+apply(plugin = "com.google.gms.google-services")

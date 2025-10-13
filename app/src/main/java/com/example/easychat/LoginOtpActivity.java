@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class LoginOtpActivity extends AppCompatActivity {
+public class    LoginOtpActivity extends AppCompatActivity {
 
     String phoneNumber;
     Long timeoutSeconds = 120L;
