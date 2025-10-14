@@ -1,6 +1,7 @@
 package com.example.easychat;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
@@ -29,6 +30,9 @@ public class SearchUserActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     SearchUserRecyclerAdapter adapter;
 
+    private Handler handler = new Handler();
+    private Runnable searchRunnable;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,11 +48,16 @@ public class SearchUserActivity extends AppCompatActivity {
         backButton.setOnClickListener( v ->{
             getOnBackPressedDispatcher().onBackPressed();
         });
-
+        setupRecyclerView();
        searchInput.addTextChangedListener(new TextWatcher() {
            @Override
            public void afterTextChanged(Editable s) {
-
+               String searchTerm = s.toString().trim();
+               if (searchRunnable != null) {
+                   handler.removeCallbacks(searchRunnable);
+               }
+               searchRunnable = () -> performSearch(searchTerm);
+               handler.postDelayed(searchRunnable, 300);
            }
 
            @Override
@@ -58,33 +67,61 @@ public class SearchUserActivity extends AppCompatActivity {
 
            @Override
            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String searchTerm = s.toString().trim();
-                setupSearchRecyclerView(searchTerm);
            }
        });
     }
 
-    void setupSearchRecyclerView(String searchTerm){
-        if (adapter != null) {
-            adapter.stopListening();
-        }
-        if (searchTerm.isEmpty()) {
-            recyclerView.setAdapter(null);
-            return;
-        }
-        Query query = FirebaseUtil.allUserCollectionReference()
-                .orderBy("username")
-                .startAt(searchTerm)
-                .endAt(searchTerm + "\uf8ff");
 
-            FirestoreRecyclerOptions<UserModel> options = new FirestoreRecyclerOptions.Builder<UserModel>()
-                    .setQuery(query,UserModel.class).build();
+    void setupRecyclerView() {
+        Query query = FirebaseUtil.allUserCollectionReference().whereEqualTo("username", "non_existent_user");
 
-            adapter = new SearchUserRecyclerAdapter(options,getApplicationContext());
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(adapter);
-            adapter.startListening();
+        FirestoreRecyclerOptions<UserModel> options = new FirestoreRecyclerOptions.Builder<UserModel>()
+                .setQuery(query, UserModel.class).build();
+        adapter = new SearchUserRecyclerAdapter(options, getApplicationContext());
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
     }
+
+    void performSearch(String searchTerm) {
+        Query query;
+        if (searchTerm.isEmpty()) {
+            // Nếu không có nội dung tìm kiếm, query một cái gì đó không tồn tại
+            query = FirebaseUtil.allUserCollectionReference().whereEqualTo("username", "non_existent_user");
+        } else {
+            query = FirebaseUtil.allUserCollectionReference()
+                    .orderBy("username")
+                    .startAt(searchTerm)
+                    .endAt(searchTerm + "\uf8ff");
+        }
+
+        FirestoreRecyclerOptions<UserModel> options = new FirestoreRecyclerOptions.Builder<UserModel>()
+                .setQuery(query, UserModel.class).build();
+
+        adapter.updateOptions(options);
+    }
+
+
+//    void setupSearchRecyclerView(String searchTerm){
+//        if (adapter != null) {
+//            adapter.stopListening();
+//        }
+//        if (searchTerm.isEmpty()) {
+//            recyclerView.setAdapter(null);
+//            return;
+//        }
+//        Query query = FirebaseUtil.allUserCollectionReference()
+//                .orderBy("username")
+//                .startAt(searchTerm)
+//                .endAt(searchTerm + "\uf8ff");
+//
+//            FirestoreRecyclerOptions<UserModel> options = new FirestoreRecyclerOptions.Builder<UserModel>()
+//                    .setQuery(query,UserModel.class).build();
+//
+//            adapter = new SearchUserRecyclerAdapter(options,getApplicationContext());
+//            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//            recyclerView.setAdapter(adapter);
+//            adapter.startListening();
+//    }
 
     @Override
     protected void onStart() {
