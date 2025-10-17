@@ -10,7 +10,6 @@
         android:background="@drawable/cicurlar_bg"
         android:src="@drawable/persona_icon"
         android:padding="4dp"
-        app:tint="@color/light_gray"
         android:backgroundTint="@color/off_white"
         android:layout_centerInParent="true"
         android:id="@+id/profile_pic_image_view"

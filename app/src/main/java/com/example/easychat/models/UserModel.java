@@ -1,21 +1,23 @@
 package com.example.easychat.models;
 
 import java.util.Date;
-import java.sql.Timestamp;
 
 public class UserModel {
     private String phone;
     private String username;
     private Date createdTimestamp;
     private String userId;
+    private String profilePic;
+
     public UserModel() {
     }
 
-    public UserModel(String phone, String username, Date createdTimestamp,String userId) {
+    public UserModel(String phone, String username, Date createdTimestamp, String userId, String profilePic) {
         this.phone = phone;
         this.username = username;
         this.createdTimestamp = createdTimestamp;
         this.userId = userId;
+        this.profilePic = profilePic;
     }
 
     public String getPhone() {
@@ -39,7 +41,7 @@ public class UserModel {
     }
 
     public void setCreatedTimestamp(Date createdTimestamp) {
-        this.createdTimestamp = (Date) createdTimestamp;
+        this.createdTimestamp = createdTimestamp;
     }
 
     public String getUserId() {
@@ -48,5 +50,13 @@ public class UserModel {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
     }
 }

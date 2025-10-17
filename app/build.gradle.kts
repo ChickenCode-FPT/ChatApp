@@ -67,6 +67,13 @@ dependencies {
     implementation("com.hbb20:ccp:2.5.0")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.firebaseui:firebase-ui-firestore:9.0.0")
-
+    implementation("com.github.dhaval2404:imagepicker:2.1")
+    implementation("com.github.bumptech.glide:glide:5.0.5")
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation("com.cloudinary:cloudinary-android:3.0.2")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.navigation:navigation-fragment:2.7.7")
+    implementation("androidx.navigation:navigation-ui:2.7.7")
 }
 apply(plugin = "com.google.gms.google-services")

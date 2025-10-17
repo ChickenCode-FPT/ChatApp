@@ -2,8 +2,12 @@ package com.example.easychat.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.easychat.models.UserModel;
 
 public class AndoirdUtil {
@@ -23,5 +27,9 @@ public class AndoirdUtil {
         userModel.setPhone(intent.getStringExtra("phone"));
         userModel.setUserId(intent.getStringExtra("userid"));
         return userModel;
+    }
+
+    public static void setProfilePicture(Context context, Uri imageUri, ImageView imageView){
+        Glide.with(context).load(imageUri).apply(RequestOptions.circleCropTransform()).into(imageView) ;
     }
 }

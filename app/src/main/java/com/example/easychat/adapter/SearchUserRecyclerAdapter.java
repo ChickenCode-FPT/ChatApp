@@ -2,6 +2,7 @@ package com.example.easychat.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,8 @@ public class SearchUserRecyclerAdapter extends FirestoreRecyclerAdapter<UserMode
 
     @Override
     protected void onBindViewHolder(@NonNull UserModelViewHolder holder, int position, @NonNull UserModel model) {
+        Uri profilePicUri = Uri.parse(model.getProfilePic());
+        AndoirdUtil.setProfilePicture(context, profilePicUri, holder.profilePic);
         holder.usernameText.setText(model.getUsername());
         holder.phoneText.setText(model.getPhone());
         if(model.getUserId().equals(FirebaseUtil.currentUserId())){
