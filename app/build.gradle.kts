@@ -38,6 +38,12 @@ android {
     buildFeatures {
         compose = true
     }
+    packaging {
+        resources {
+            excludes += setOf("META-INF/INDEX.LIST", "META-INF/DEPENDENCIES")
+        }
+    }
+
 }
 
 dependencies {
@@ -56,6 +62,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.firebase.firestore)
     implementation(libs.androidx.recyclerview)
+    implementation(libs.firebase.messaging)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -75,5 +82,9 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.navigation:navigation-fragment:2.7.7")
     implementation("androidx.navigation:navigation-ui:2.7.7")
+    implementation("com.google.firebase:firebase-messaging:25.0.1")
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.google.auth:google-auth-library-oauth2-http:1.23.0")
 }
 apply(plugin = "com.google.gms.google-services")

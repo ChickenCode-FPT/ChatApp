@@ -1,5 +1,6 @@
 package com.example.easychat;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -50,7 +51,7 @@ public class ProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
         imagePickerLaucher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result ->{
-                    if(result.getResultCode() == ChatActivity.RESULT_OK){
+                    if(result.getResultCode() == Activity.RESULT_OK){
                             Intent data = result.getData();
                             if(data !=null && data.getData() != null){
                                 selectedImageUri = data.getData();

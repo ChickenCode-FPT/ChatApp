@@ -1,9 +1,11 @@
 package com.example.easychat;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -16,17 +18,20 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.easychat.adapter.ChatRecyclerAdapter;
 import com.example.easychat.adapter.SearchUserRecyclerAdapter;
 import com.example.easychat.models.ChatMessageModel;
 import com.example.easychat.models.ChatroomModel;
 import com.example.easychat.models.UserModel;
+import com.example.easychat.services.FCMHttpV1Sender;
 import com.example.easychat.utils.AndoirdUtil;
 import com.example.easychat.utils.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
@@ -52,6 +57,8 @@ public class ChatActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
 
+    ImageView imageView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,10 +73,27 @@ public class ChatActivity extends AppCompatActivity {
         backBtn = findViewById(R.id.back_btn);
         otherUsername =  findViewById(R.id.other_username);
         recyclerView = findViewById(R.id.recycler_chat);
+        imageView = findViewById(R.id.profile_pic_image_view);
+
+
         backBtn.setOnClickListener((v) -> {
             onBackPressed();
         });
         otherUsername.setText(otherUser.getUsername());
+        if (otherUser.getProfilePic() != null && !otherUser.getProfilePic().isEmpty()) {
+            Glide.with(this)
+                    .load(otherUser.getProfilePic())
+                    .circleCrop()
+                    .placeholder(R.drawable.icon_chat)
+                    .error(R.drawable.icon_chat)
+                    .into(imageView);
+
+        } else {
+            // Nếu người dùng chưa có ảnh, gán ảnh mặc định
+            imageView.setImageResource(R.drawable.icon_chat);
+        }
+
+
 
         sendMessageBtn.setOnClickListener((v -> {
             String message = messageInput.getText().toString().trim();
@@ -118,13 +142,31 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<DocumentReference> task) {
                 if (task.isSuccessful()) {
-                    messageInput.setText(""); // xoá nội dung sau khi gửi
-                    recyclerView.smoothScrollToPosition(0); // cuộn lên đầu
+                    messageInput.setText("");
+                    recyclerView.smoothScrollToPosition(0);
                 } else {
                      Log.e("ChatActivity", "Send message failed", task.getException());
                 }
             }
         });
+        FirebaseUtil.allUserCollectionReference()
+                .document(otherUser.getUserId())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    String token = documentSnapshot.getString("fcmToken");
+                    if (token != null && !token.isEmpty()) {
+                        FirebaseUtil.getCurrentUserName(name -> {
+                            FCMHttpV1Sender.sendPushNotification(
+                                    getApplicationContext(),
+                                    token,
+                                    "Tin nhắn mới từ " + name,
+                                    message
+                            );
+                        });
+
+                    }
+                });
+
     }
 
     void getOrCreateChatRoomModel(){

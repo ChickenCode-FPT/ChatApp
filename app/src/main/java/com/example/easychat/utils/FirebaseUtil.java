@@ -5,6 +5,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
@@ -66,5 +67,25 @@ public class FirebaseUtil {
 
     public static void logout(){
         FirebaseAuth.getInstance().signOut();
+    }
+
+    public interface NameCallback {
+        void onNameLoaded(String name);
+    }
+
+    public static void getCurrentUserName(NameCallback callback) {
+        currentUserDetails().get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot doc = task.getResult();
+                if (doc != null && doc.exists()) {
+                    String name = doc.getString("username");
+                    if (name != null && !name.isEmpty()) {
+                        callback.onNameLoaded(name);
+                        return;
+                    }
+                }
+            }
+            callback.onNameLoaded("Người dùng");
+        });
     }
 }

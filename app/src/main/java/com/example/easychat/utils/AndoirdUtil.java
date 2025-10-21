@@ -19,6 +19,7 @@ public class AndoirdUtil {
         intent.putExtra("username",model.getUsername());
         intent.putExtra("phone",model.getPhone());
         intent.putExtra("userid",model.getUserId());
+        intent.putExtra("profilePic", model.getProfilePic());
 
     }
     public static UserModel getUserModelFromIntent(Intent intent){
@@ -26,6 +27,7 @@ public class AndoirdUtil {
         userModel.setUsername(intent.getStringExtra("username"));
         userModel.setPhone(intent.getStringExtra("phone"));
         userModel.setUserId(intent.getStringExtra("userid"));
+        userModel.setProfilePic(intent.getStringExtra("profilePic"));
         return userModel;
     }
 
