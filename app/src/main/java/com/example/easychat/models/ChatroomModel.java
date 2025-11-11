@@ -11,6 +11,10 @@ public class ChatroomModel {
 
     String lastMessage;
 
+    boolean isGroup;
+    String groupName;
+    String groupAvatar;
+
     public ChatroomModel(){
 
     }
@@ -20,6 +24,7 @@ public class ChatroomModel {
         this.userIds = userIds;
         this.lastMessageSenderId = lastMessageSenderId;
         this.lastMessageStamp = lastMessageStamp;
+//        this.isGroup = false;
     }
 
     public String getRoomId() {
@@ -61,4 +66,14 @@ public class ChatroomModel {
     public void setLastMessage(String lastMessage) {
         this.lastMessage = lastMessage;
     }
+
+    public boolean isGroup() { return isGroup; }
+    public void setGroup(boolean group) { isGroup = group; }
+
+    public String getGroupName() { return groupName; }
+    public void setGroupName(String groupName) { this.groupName = groupName; }
+
+    public String getGroupAvatar() { return groupAvatar; }
+    public void setGroupAvatar(String groupAvatar) { this.groupAvatar = groupAvatar; }
+
 }

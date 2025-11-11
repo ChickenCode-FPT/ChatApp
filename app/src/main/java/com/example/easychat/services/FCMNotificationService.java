@@ -13,6 +13,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.example.easychat.MainActivity;
 import com.example.easychat.R;
+import com.example.easychat.utils.FirebaseUtil;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -47,24 +48,29 @@ public class FCMNotificationService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        Log.d("FCM", "Message received: " + remoteMessage);
 
-        // 🔹 Tạo notification channel nếu cần
         createNotificationChannel();
 
-        // 🔹 Lấy title và body từ data
         String title = "EasyChat";
         String body = "Bạn có tin nhắn mới!";
+        String senderId = null;
 
         if (remoteMessage.getNotification() != null) {
             title = remoteMessage.getNotification().getTitle();
             body = remoteMessage.getNotification().getBody();
-        } else if (remoteMessage.getData().size() > 0) {
+        }
+        if (remoteMessage.getData().size() > 0) {
             title = remoteMessage.getData().get("title");
             body = remoteMessage.getData().get("body");
+            senderId = remoteMessage.getData().get("senderId");
         }
 
-        // 🔹 Intent khi bấm vào thông báo
+        // 🔹 Bỏ qua nếu là chính mình
+        if (senderId != null && senderId.equals(FirebaseUtil.currentUserId())) {
+            Log.d("FCMNotificationService", "Notification skipped for self");
+            return;
+        }
+
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(
@@ -72,20 +78,26 @@ public class FCMNotificationService extends FirebaseMessagingService {
                 PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE
         );
 
-        // 🔹 Chính là đoạn bạn hỏi
         String channelId = getString(R.string.default_notification_channel_id);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
-                .setSmallIcon(R.drawable.ic_launcher_foreground) // hoặc ic_notification của bạn
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle(title)
                 .setContentText(body)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent);
 
-        // 🔹 Hiển thị thông báo
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                Log.d("FCM", "Notification permission not granted");
+                return;
+            }
+        }
+
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify((int) System.currentTimeMillis(), builder.build());
     }
+
 
 
 }

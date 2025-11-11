@@ -20,10 +20,9 @@ public class FCMHttpV1Sender {
     private static final String FCM_ENDPOINT =
             "https://fcm.googleapis.com/v1/projects/" + PROJECT_ID + "/messages:send";
 
-    public static void sendPushNotification(Context context, String targetToken, String title, String body) {
+    public static void sendPushNotification(Context context, String targetToken, String title, String body, String senderId) {
         new Thread(() -> {
             try {
-                // 🔑 Đọc file JSON từ res/raw
                 InputStream serviceAccountStream = context.getResources().openRawResource(R.raw.service_account);
 
                 GoogleCredentials credentials = GoogleCredentials
@@ -33,20 +32,22 @@ public class FCMHttpV1Sender {
 
                 String accessToken = credentials.getAccessToken().getTokenValue();
 
-                // 🧩 Tạo JSON payload cho FCM v1
                 JSONObject notification = new JSONObject();
                 notification.put("title", title);
                 notification.put("body", body);
 
+                JSONObject data = new JSONObject();
+                data.put("senderId", senderId); // thêm senderId vào data
+
                 JSONObject messageObj = new JSONObject();
                 messageObj.put("token", targetToken);
                 messageObj.put("notification", notification);
+                messageObj.put("data", data);
 
                 JSONObject fullMessage = new JSONObject();
                 fullMessage.put("message", messageObj);
 
-                // 🌐 Gửi HTTP POST request tới FCM
-                URL url = new URL(FCM_ENDPOINT);
+                URL url = new URL("https://fcm.googleapis.com/v1/projects/easychat-back-end/messages:send");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Authorization", "Bearer " + accessToken);
@@ -61,15 +62,10 @@ public class FCMHttpV1Sender {
                 int responseCode = conn.getResponseCode();
                 Log.d("FCMHttpV1Sender", "FCM Response Code: " + responseCode);
 
-                if (responseCode == 200) {
-                    Log.d("FCMHttpV1Sender", "Notification sent successfully!");
-                } else {
-                    Log.e("FCMHttpV1Sender", "Failed to send notification. Response: " + responseCode);
-                }
-
             } catch (Exception e) {
                 Log.e("FCMHttpV1Sender", "Error sending FCM notification", e);
             }
         }).start();
     }
 }
+

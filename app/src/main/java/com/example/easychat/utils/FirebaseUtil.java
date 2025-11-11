@@ -88,4 +88,9 @@ public class FirebaseUtil {
             callback.onNameLoaded("Người dùng");
         });
     }
+
+    public static DocumentReference getUserById(String userId) {
+        return allUserCollectionReference().document(userId);
+    }
+
 }

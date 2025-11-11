@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.easychat.utils.FirebaseUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -39,6 +40,11 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         searchButton = findViewById(R.id.main_search_btn);
+
+        FloatingActionButton createGroupFab = findViewById(R.id.create_group_fab);
+        createGroupFab.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, CreateGroupActivity.class));
+        });
 
         searchButton.setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, SearchUserActivity.class))

@@ -3,13 +3,13 @@
 
     <style name="Theme.EasyChat" parent="Theme.AppCompat.Light.NoActionBar" />
 
-    <item type="color"  name="colorPrimary">@color/my_primary </item>
-    <item type="color" name="colorPrimaryVariant">@color/my_primary </item>
+    <item name="colorPrimary" type="color">@color/my_primary</item>
+    <item name="colorPrimaryVariant" type="color">@color/my_primary</item>
     <item name="colorOnPrimary" type="color">@color/white</item>
 
 
-    <item type="color" name="secondaryPrimary">@color/secondaryPrimary </item>
-    <item type="color" name="colorSecondaryVariant">@color/secondaryPrimary</item>
+    <item name="colorSecondary" type="color">@color/my_secondary</item>
+    <item name="colorSecondaryVariant" type="color">@color/my_secondary</item>
     <item name="colorOnSecondary" type="color">@color/black</item>
 
 
